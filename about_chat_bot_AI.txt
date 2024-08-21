@@ -13,3 +13,13 @@ Project CHAT AI :
 - Use of local storage. All your chats and messages are been saved locally on your devic. Even if you refresh the page, your chats remains persistent
 - Responsive application on all platforms
 - 
+
+
+
+
+Tools used
+
+- Vite
+- react
+- javascript
+- 
