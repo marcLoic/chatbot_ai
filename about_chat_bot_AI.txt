@@ -1,0 +1,15 @@
+Project CHAT AI : 
+
+- Designe focuses on ease of use
+- Interface design to be intuitive providing a smooth and engaging user experience
+- Users can type their messages at the buttom and see the conversation flow in real time
+- The clear seperation of sent and received messages makes it easy to follow the conversation
+- Typing indicator showing the AI is processing your message and preparing your response making the interaction feel more natural and realistic
+- Integration of an emoji picker allowing users to add a touch of emotions to their messages
+- Chat list that displays all your conversations
+- Each chat is timed stamped making it easy to track and revisit previous conversations
+- You can also start a new chat by clicking the new chat icon
+- Deletion of a particular chart (managing chat history)
+- Use of local storage. All your chats and messages are been saved locally on your devic. Even if you refresh the page, your chats remains persistent
+- Responsive application on all platforms
+- 
