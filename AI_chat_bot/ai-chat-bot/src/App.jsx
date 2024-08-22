@@ -11,8 +11,11 @@ const App = () => {
     setIsChatting(true)
     if(chats.length === 0) {
       const newChat = {
-        id: `Chat ${new Date().toLocaleDateString("en-GB")} ${Date().toLocaleTimeString()}`
+        id: `Chat ${new Date().toLocaleDateString
+          ("en-GB")} ${new Date().toLocaleTimeString()}`,
+          messages: [],
       }
+      setChats([newChat])
     }
   }
 
