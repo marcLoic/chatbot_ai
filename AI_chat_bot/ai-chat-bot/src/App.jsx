@@ -9,14 +9,14 @@ const App = () => {
 
   const handleStartChat = () => {
     setIsChatting(true)
-    // if(chats.length === 0) {
-    //   const newChat = {
-    //     id: `Chat ${new Date().toLocaleDateString("en-GB")} 
-    //               ${new Date().toLocaleTimeString()}`,
-    //       messages: [],
-    //   }
-    //   setChats([newChat])
-    // }
+    if(chats.length === 0) {
+      const newChat = {
+        id: `Chat ${new Date().toLocaleDateString("en-GB")} 
+                  ${new Date().toLocaleTimeString()}`,
+          messages: [],
+      }
+      setChats([newChat])
+    }
   }
 
   const handleGoBack = () => {
@@ -27,7 +27,7 @@ const App = () => {
     <div className='container'>
       {isChatting ? 
         (<ChatBotApp onGoBack={handleGoBack} 
-          chat={chats} setChats={setChats} />) : 
+          chats={chats} setChats={setChats} />) : 
         (<ChatBotStart onStartChat={handleStartChat} />)
       }
     </div>
