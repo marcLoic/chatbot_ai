@@ -25,4 +25,4 @@ Tools used
 - BoxIcons
 - Google fonts : outfit, exo 2
 - fontawesome
- 
+- uuid

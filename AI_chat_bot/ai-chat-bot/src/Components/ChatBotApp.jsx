@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './ChatBotApp.css'
 
-const ChatBotApp = ({ onGoBack, chats, setChats }) => {
+const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNewChat }) => {
   const [inputValue, setInputValue] = useState('')
   const [messages, setMessages] = useState(chats[0]?.messages || [])
+  const [isTyping, setIsTyping] = useState(false)
+  const chatEndRef = useRef(null)
+
+
+  useEffect(() => {
+    const activeChatObj = chats.find((chat) => chat.id === activeChat)
+    setMessages(activeChatObj ? activeChatObj.messages : [])
+  }, [activeChat, chats])
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value)
   }
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if(inputValue.trim === '') return
 
     const newMessage = {
@@ -18,20 +26,61 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
       timestamp: new Date().toLocaleTimeString()
     }
 
-    const updatedMessages = [...messages, newMessage]
-    setMessages(updatedMessages)
-    setInputValue('')
-
-    const updatedChats = chats.map((chat, index) => {
-      if(index === 0) {
-        return {...chats, messages: updatedMessages}
-      }
-      return chat
-    })
-    setChats(updatedChats)
-    
-  }
+    if(!activeChat) {
+      onNewChat(inputValue)
+      setInputValue('')
+    } else {
+      const updatedMessages = [...messages, newMessage]
+      setMessages(updatedMessages)
+      setInputValue('')
   
+      const updatedChats = chats.map((chat) => {
+        if(chat.id === activeChat) {
+          return {...chat, messages: updatedMessages}
+        }
+        return chat
+      })
+      setChats(updatedChats)
+      setIsTyping(true)
+
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer sk-proj-e6WNQcd3CZUi5G8wCVVKT3BlbkFJ201oWTHY3A3m7mKCsJuK`
+          // Authorization: `Bearer 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`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo", 
+          messages: [{role: "user", content: inputValue}],
+          max_tokens: 500,
+        })
+      })
+
+      const data = await response.json()
+      const chatResponse = data.choices[0].message.content.trim()
+
+      const newResponse = {
+        type: 'response',
+        text: chatResponse,
+        timestamp: new Date().toLocaleTimeString()
+      }
+
+      const updatedMessagesWithResponse = [...updatedMessages, newResponse]
+      setMessages(updatedMessagesWithResponse)
+      setIsTyping(false)
+
+      const updatedChatsWithResponse = chats.map((chat) => {
+        if(chat.id === activeChat) {
+          return {...chat, messages: updatedMessagesWithResponse}
+        }
+        return chat
+      })
+      setChats(updatedChatsWithResponse)
+    }
+  }
+
   const handleKeyDown = (e) => {
     if(e.key === 'Enter') {
       e.preventDefault()
@@ -39,17 +88,41 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
     }
   }
 
+  const handleSelectChat = (id) => {
+    setActiveChat(id)
+  }
+
+  const handleDeleteChat = (id) => {
+    const updatedChats = chats.filter((chat) => chat.id !== id)
+    setChats(updatedChats)
+
+    if(id === activeChat) {
+      const newActiveChat = updatedChats.length > 0 ? updatedChats[0].id : null
+      setActiveChat(newActiveChat)
+    }
+  }
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
   return (
     <div className='chat-app'>
       <div className='chat-list'>
         <div className="chat-list-header">
           <h2>Chat List</h2>
-          <i className="bx bx-edit-alt new-chat"></i>
+          <i className="bx bx-edit-alt new-chat"
+            onClick={() => onNewChat()}></i>
         </div>
-        {chats.map((chat, index) => (
-            <div key={index} className={`chat-list-item ${index === 0 ? 'active' : ''}`}>
-              <h4>{chat.id}</h4>
-              <i className="bx bx-x-circle"></i>
+        {chats.map((chat) => (
+            <div key={chat.id} className={`chat-list-item 
+              ${chat.id === activeChat ? 'active' : ''}`}
+              onClick={() => handleSelectChat(chat.id)} >
+              <h4>{chat.displayId}</h4>
+              <i className="bx bx-x-circle" onClick={(e) => {
+                e.stopPropagation()
+                handleDeleteChat(chat.id)
+              }} ></i>
             </div>
         ))}
       </div>
@@ -66,8 +139,8 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
               <span>{msg.timestamp}</span>
             </div>
           ))}
-          
-          <div className="typing">Typing...</div>
+          {isTyping && <div className="typing">Typing...</div>}
+          <div ref={chatEndRef}></div>
         </div>
         <form action="" className="msg-form" onSubmit={(e) => e.preventDefault()}>
           <i className="fa-solid fa-face-smile emoji"></i>
