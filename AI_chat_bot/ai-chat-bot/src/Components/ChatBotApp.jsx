@@ -48,8 +48,8 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer sk-proj-e6WNQcd3CZUi5G8wCVVKT3BlbkFJ201oWTHY3A3m7mKCsJuK`
-          // Authorization: `Bearer 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`
+          Authorization: `Bearer `
+          // Authorization: `Bearer `
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo", 
