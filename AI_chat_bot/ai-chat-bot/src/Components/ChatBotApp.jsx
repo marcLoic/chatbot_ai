@@ -52,7 +52,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
           // Authorization: `Bearer `
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo", 
+          model: "gpt-3.5-turbo",
           messages: [{role: "user", content: inputValue}],
           max_tokens: 500,
         })
