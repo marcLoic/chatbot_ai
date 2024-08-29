@@ -131,7 +131,10 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
           <h2>Chat List</h2>
           <i className="bx bx-edit-alt new-chat"
             onClick={() => onNewChat()}></i>
-          <i className="bx bx-x-circle close-list" onClick={() => setShowChatList(false)}></i>  
+          { showChatList && (
+            <i className="bx bx-x-circle close-list" onClick={() => setShowChatList(false)}></i>  
+            )
+          }  
         </div>
         {chats.map((chat) => (
             <div key={chat.id} className={`chat-list-item 
