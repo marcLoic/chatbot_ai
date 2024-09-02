@@ -32,6 +32,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
   }
 
   const sendMessage = async () => {
+    setShowEmojiPicker(false)
     if(inputValue.trim === '') return
 
     const newMessage = {
